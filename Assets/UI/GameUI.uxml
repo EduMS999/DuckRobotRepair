@@ -1,8 +1,12 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:Template name="EndScreen" src="project://database/Assets/UI/EndScreen.uxml?fileID=9197481963319205126&amp;guid=f969898db7a372341a5705392857be3f&amp;type=3#EndScreen"/>
+    <ui:Template name="NPCDialogue" src="project://database/Assets/UI/NPCDialogue.uxml?fileID=9197481963319205126&amp;guid=3ba7fe389676e3540b6c9a1a62765490&amp;type=3#NPCDialogue"/>
     <ui:VisualElement name="HealthBarBackground" style="flex-grow: 0; width: 20%; height: 15%; background-image: url(&quot;project://database/Assets/_2DAdventureGame/Tutorial_Demo/Demo_Art/Ducko/UI/UIHealthFrameDucko.png?fileID=2800000&amp;guid=918e7a741c040c140a699a450f3d6e2d&amp;type=3#UIHealthFrameDucko&quot;); -unity-background-scale-mode: scale-to-fit; aspect-ratio: auto;">
         <ui:VisualElement name="HealthBarContainer" style="flex-grow: 1; position: absolute; height: 57px; width: 197px; top: 48px; left: 160px;">
             <ui:VisualElement name="HealthBar" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/_2DAdventureGame/Tutorial_Demo/Demo_Art/Ducko/UI/UIHealthBarDucko.png?fileID=2800000&amp;guid=335e35d6c24ef5141b778902f9d19a3b&amp;type=3#UIHealthBarDucko&quot;);"/>
         </ui:VisualElement>
         <ui:VisualElement name="CharacterPortrait" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/_2DAdventureGame/Art/Ducko/UI/CharacterPortrait.png?fileID=2800000&amp;guid=0332b35b8fe3cf8458eb0558889493d1&amp;type=3#CharacterPortrait&quot;); -unity-background-scale-mode: scale-to-fit; position: absolute; height: 107px; width: 136px; top: 26px; left: 18px;"/>
     </ui:VisualElement>
+    <ui:Instance template="NPCDialogue" name="NPCDialogue" style="position: absolute; top: 70%; right: 10%; left: 10%;"/>
+    <ui:Instance template="EndScreen" name="EndScreen" style="position: absolute; top: 0; right: 0; bottom: 0; left: 0;"/>
 </ui:UXML>
