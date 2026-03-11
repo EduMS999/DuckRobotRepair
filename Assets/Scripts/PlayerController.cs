@@ -8,13 +8,14 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     private PlayerInput Input;
-    private Rigidbody2D rb;
+    public float movementSpeed;
+    //private Rigidbody2D rb;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         Input = GetComponent<PlayerInput>();    
-        rb = GetComponent<Rigidbody2D>();  
+        //rb = GetComponent<Rigidbody2D>();  
     }
 
     // Update is called once per frame
@@ -22,7 +23,7 @@ public class PlayerController : MonoBehaviour
     {
         Vector2 move = Input.actions["Move"].ReadValue<Vector2>();
         //Debug.Log(move); 
-        Vector2 position = (Vector2)transform.position + move * 3f * Time.deltaTime; 
+        Vector2 position = (Vector2)transform.position + move * movementSpeed * Time.deltaTime; 
         transform.position = position;
 
         /*RaycastHit2D hit = Physics2D.Raycast(rb.position + Vector2.up * 0.2f, moveDirection, 1.5f, LayerMask.GetMask("NPC"));
