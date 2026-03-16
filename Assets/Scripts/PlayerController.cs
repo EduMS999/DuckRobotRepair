@@ -8,29 +8,43 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     private PlayerInput Input;
+    private Vector2 move; // Guarda los valores del movimiento
     public float movementSpeed;
-    //private Rigidbody2D rb;
+    private Rigidbody2D rb;
+    public int maxHealth = 5; int currentHealth;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         Input = GetComponent<PlayerInput>();    
-        //rb = GetComponent<Rigidbody2D>();  
+        rb = GetComponent<Rigidbody2D>();
+        currentHealth = maxHealth;
     }
 
     // Update is called once per frame
     void Update()
     {
-        Vector2 move = Input.actions["Move"].ReadValue<Vector2>();
+        move = Input.actions["Move"].ReadValue<Vector2>();
         //Debug.Log(move); 
-        Vector2 position = (Vector2)transform.position + move * movementSpeed * Time.deltaTime; 
-        transform.position = position;
+        
 
         /*RaycastHit2D hit = Physics2D.Raycast(rb.position + Vector2.up * 0.2f, moveDirection, 1.5f, LayerMask.GetMask("NPC"));
         if (hit.collider != null)
         {
             FindFriend(hit);
         }*/
+    }
+
+    void FixedUpdate() 
+    {
+        Vector2 position = (Vector2)rb.position + move * movementSpeed * Time.deltaTime; 
+        rb.MovePosition(position);
+    }
+
+    void ChangeHealth (int amount)
+    {
+        currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
+        Debug.Log(currentHealth + "/" + maxHealth);
     }
 
     void FindFriend(RaycastHit2D hit)
