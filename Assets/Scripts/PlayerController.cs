@@ -1,3 +1,4 @@
+using System;
 using Beginner2D;
 using UnityEditor.Build;
 using UnityEditor.Timeline.Actions;
@@ -11,13 +12,21 @@ public class PlayerController : MonoBehaviour
     private Vector2 move; // Guarda los valores del movimiento
     public float movementSpeed;
     private Rigidbody2D rb;
-    public int maxHealth = 5; int currentHealth;
+    public int maxHealth = 5; 
+    int currentHealth;
+    public int health { get { return currentHealth; } }
+
+    // Variables relacionadas con la invencibilidad temporal
+    public float timeInvincible = 2.0f; 
+    bool isInvincible; 
+    float damageCooldown;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         Input = GetComponent<PlayerInput>();    
         rb = GetComponent<Rigidbody2D>();
+        
         currentHealth = maxHealth;
     }
 
@@ -26,13 +35,20 @@ public class PlayerController : MonoBehaviour
     {
         move = Input.actions["Move"].ReadValue<Vector2>();
         //Debug.Log(move); 
-        
+
 
         /*RaycastHit2D hit = Physics2D.Raycast(rb.position + Vector2.up * 0.2f, moveDirection, 1.5f, LayerMask.GetMask("NPC"));
         if (hit.collider != null)
         {
             FindFriend(hit);
         }*/
+
+        if (isInvincible) 
+        { 
+            damageCooldown -= Time.deltaTime; 
+            if (damageCooldown < 0) 
+                isInvincible = false; 
+        }
     }
 
     void FixedUpdate() 
@@ -41,8 +57,15 @@ public class PlayerController : MonoBehaviour
         rb.MovePosition(position);
     }
 
-    void ChangeHealth (int amount)
+    public void ChangeHealth (int amount)
     {
+        if (amount < 0) 
+        { 
+            if (isInvincible) return; 
+            isInvincible = true; 
+            damageCooldown = timeInvincible; 
+        }
+
         currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
         Debug.Log(currentHealth + "/" + maxHealth);
     }
