@@ -15,17 +15,22 @@ public class PlayerController : MonoBehaviour
     public int maxHealth = 5; 
     int currentHealth;
     public int health { get { return currentHealth; } }
+    Animator animator;
+    Vector2 moveDirection = new Vector2(1, 0);
 
     // Variables relacionadas con la invencibilidad temporal
     public float timeInvincible = 2.0f; 
     bool isInvincible; 
     float damageCooldown;
 
+    public GameObject projectilePrefab;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         Input = GetComponent<PlayerInput>();    
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
         
         currentHealth = maxHealth;
     }
@@ -49,6 +54,17 @@ public class PlayerController : MonoBehaviour
             if (damageCooldown < 0) 
                 isInvincible = false; 
         }
+
+        animator.SetFloat("Look X", moveDirection.x);
+        animator.SetFloat("Look Y", moveDirection.y); 
+        animator.SetFloat("Speed", move.magnitude);
+
+        if (!Mathf.Approximately(move.x, 0.0f) || !Mathf.Approximately(move.y, 0.0f))
+        {
+            moveDirection.Set(move.x, move.y); 
+            moveDirection.Normalize();
+        }
+
     }
 
     void FixedUpdate() 
@@ -61,13 +77,22 @@ public class PlayerController : MonoBehaviour
     {
         if (amount < 0) 
         { 
-            if (isInvincible) return; 
+            if (isInvincible) return;
+            animator.SetTrigger("Hit");
             isInvincible = true; 
             damageCooldown = timeInvincible; 
         }
 
         currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
         Debug.Log(currentHealth + "/" + maxHealth);
+    }
+
+    public void Launch(InputAction.CallbackContext context)
+    {
+        GameObject projectileObject = Instantiate(projectilePrefab, rb.position + Vector2.up * 1.25f, Quaternion.identity);
+        Projectile projectile = projectileObject.GetComponent<Projectile>(); 
+        projectile.Launch(moveDirection, 300);
+        animator.SetTrigger("Launch");
     }
 
     void FindFriend(RaycastHit2D hit)

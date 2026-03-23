@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 4682997140242195391}
   - component: {fileID: 2180483169575506283}
   - component: {fileID: 4563188571082845538}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: PlayerCharacter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -109,6 +109,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   movementSpeed: 6.01
+  maxHealth: 5
+  timeInvincible: 2
+  projectilePrefab: {fileID: 1767612295487589281, guid: e614ddd36838f00419cb5e0c46d9b18f,
+    type: 3}
 --- !u!114 &7925874527786777011
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -139,6 +143,22 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 2e740819-d583-4e15-839d-4792af85986a
     m_ActionName: 'Player/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d,/Keyboard/upArrow,/Keyboard/downArrow,/Keyboard/leftArrow,/Keyboard/rightArrow]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3793430413645397267}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: Launch
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 677e4d8e-8fb1-4f7d-8d29-3756975bdbc7
+    m_ActionName: 'Player/Launch[/Keyboard/c]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -190,7 +210,7 @@ Rigidbody2D:
     serializedVersion: 2
     m_Bits: 0
   m_Interpolate: 0
-  m_SleepingMode: 1
+  m_SleepingMode: 0
   m_CollisionDetection: 0
   m_Constraints: 4
 --- !u!61 &4563188571082845538
