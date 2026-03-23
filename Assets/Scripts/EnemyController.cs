@@ -33,6 +33,16 @@ public class EnemyController : MonoBehaviour
         rb.MovePosition(position);
     }
 
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        PlayerController player = other.gameObject.GetComponent<PlayerController>();
+
+        if (player != null)
+        {
+            player.ChangeHealth(-1);
+        }
+    }
+
     private void Update()
     {
         timer -= Time.deltaTime;
@@ -41,6 +51,7 @@ public class EnemyController : MonoBehaviour
         { 
             direction = -direction; 
             timer = changeTime; 
+            //vertical = !vertical;
         }
     }
 }
