@@ -13,6 +13,13 @@ public class UIHandler : MonoBehaviour
     private float m_TimerDisplay;
 
     //Instancia estática para acceder 
+    public static UIHandler instance { get; private set; }
+
+
+    private void Awake()
+    {
+        instance = this;
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -27,7 +34,7 @@ public class UIHandler : MonoBehaviour
         m_WinScreen = uiDocument.rootVisualElement.Q<VisualElement>("WinScreenContainer");
        
         // Configuracion inicial 
-        SetHealthValue(0.5f);
+        //SetHealthValue(0.5f);
         m_NonPlayerDialogue.style.display = DisplayStyle.None;
         m_TimerDisplay = -1.0f;
     }

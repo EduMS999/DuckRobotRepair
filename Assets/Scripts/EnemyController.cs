@@ -9,10 +9,14 @@ public class EnemyController : MonoBehaviour
 
     public bool vertical;
     bool broken = true;
+    public bool isBroken { get { return broken; } }
 
     public float changeTime = 3.0f;
     float timer = 0;
     int direction = 1;
+
+    public ParticleSystem smokeParticleEffect;
+    public ParticleSystem fixedParticleEffect;
 
     private void Start()
     {
@@ -70,5 +74,7 @@ public class EnemyController : MonoBehaviour
         animator.SetTrigger("Fixed");
         broken = false; 
         rb.simulated = false; 
+        smokeParticleEffect.Stop();
+        Instantiate(fixedParticleEffect, transform.position + Vector3.up * 2f, Quaternion.identity);
     }
 }

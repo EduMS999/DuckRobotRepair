@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using Beginner2D;
 using UnityEditor.Build;
 using UnityEditor.Timeline.Actions;
@@ -8,22 +9,33 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    private PlayerInput Input;
-    private Vector2 move; // Guarda los valores del movimiento
-    public float movementSpeed;
-    private Rigidbody2D rb;
-    public int maxHealth = 5; 
-    int currentHealth;
+    // Variables related to player character movement
+    public PlayerInput Input;
+    Rigidbody2D rb;
+    Vector2 move;
+    public float movementSpeed = 3.0f;
+
+    // Variables related to the health system
+    public int maxHealth = 5;
     public int health { get { return currentHealth; } }
+    int currentHealth;
+
+    // Variables related to temporary invincibility
+    public float timeInvincible = 2.0f;
+    bool isInvincible;
+    float damageCooldown;
+
+    // Variables related to Animation
     Animator animator;
     Vector2 moveDirection = new Vector2(1, 0);
 
-    // Variables relacionadas con la invencibilidad temporal
-    public float timeInvincible = 2.0f; 
-    bool isInvincible; 
-    float damageCooldown;
-
+    // Variables related to Projectile 
     public GameObject projectilePrefab;
+
+    // Variables related to NPC
+    private NonPlayerCharacter lastNonPlayerCharacter;
+    private RaycastHit2D hit;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -42,17 +54,26 @@ public class PlayerController : MonoBehaviour
         //Debug.Log(move); 
 
 
-        /*RaycastHit2D hit = Physics2D.Raycast(rb.position + Vector2.up * 0.2f, moveDirection, 1.5f, LayerMask.GetMask("NPC"));
+        hit = Physics2D.Raycast(rb.position + Vector2.up * 0.2f, moveDirection, 1.5f, LayerMask.GetMask("NPC"));
         if (hit.collider != null)
         {
-            FindFriend(hit);
-        }*/
+            // Si el rayo toca algo, obtenemos su componente NPC
+            NonPlayerCharacter npc = hit.collider.GetComponent<NonPlayerCharacter>();
+            if (npc == null) return; // Si el objeto no tiene un NPC, no hacemos nada
+            npc.dialogueBubble.SetActive(true);
+            lastNonPlayerCharacter = npc;
+        }
+        else
+        {
+            if(lastNonPlayerCharacter != null)
+                lastNonPlayerCharacter.dialogueBubble.SetActive(false);
+        }
 
-        if (isInvincible) 
-        { 
-            damageCooldown -= Time.deltaTime; 
-            if (damageCooldown < 0) 
-                isInvincible = false; 
+        if (isInvincible)
+        {
+            damageCooldown -= Time.deltaTime;
+            if (damageCooldown < 0)
+                isInvincible = false;
         }
 
         animator.SetFloat("Look X", moveDirection.x);
@@ -84,7 +105,7 @@ public class PlayerController : MonoBehaviour
         }
 
         currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
-        Debug.Log(currentHealth + "/" + maxHealth);
+        UIHandler.instance.SetHealthValue(currentHealth / (float)maxHealth);
     }
 
     public void Launch(InputAction.CallbackContext context)
@@ -95,23 +116,11 @@ public class PlayerController : MonoBehaviour
         animator.SetTrigger("Launch");
     }
 
-    void FindFriend(RaycastHit2D hit)
+    public void Interact(InputAction.CallbackContext context)
     {
-        //UIHandler.instance.DisplayDialogue();
-    }
-
-    /*public void Interact(InputAction.CallbackContext context)
-    {
-        // Lanzamos un rayo invisible (Raycast) para detectar NPCs en la capa "NPC"
-        RaycastHit2D hit = Physics2D.Raycast(rb.position + Vector2.up * 0.2f, moveDirection, 1.5f, LayerMask.GetMask("NPC"));
-
         if(hit.collider != null)
         {
-            // Si el rayo toca algo, obtenemos su componente NPC y mostramos su dialogo
-            NonPlayerCharacter npc = hit.collider.GetComponent<NonPlayerCharacter>();
-            npc.dialogueBubble.SetActive(true);
-            lastNonPlayerCharacter = npc;
-            FindFriend(hit); // Logica adicional para UI
+            UIHandler.instance.DisplayDialogue();
         }
         else
         {
@@ -122,5 +131,5 @@ public class PlayerController : MonoBehaviour
                 lastNonPlayerCharacter = null;
             }
         }
-    }*/
+    }
 }
