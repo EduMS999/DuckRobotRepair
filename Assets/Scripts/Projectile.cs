@@ -12,15 +12,13 @@ public class Projectile : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (transform.position.magnitude > 100.0f)
-        {
-            Destroy(gameObject);
-        }
+        
     }
 
     public void Launch(Vector2 direction, float force) 
     {
-        rigidbody2d.AddForce(direction * force);
+        rigidbody2d.AddForce(direction * force, ForceMode2D.Impulse); // Aplica una fuerza instantánea al proyectil en la dirección dada
+        Destroy(gameObject, 3f);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -29,11 +27,12 @@ public class Projectile : MonoBehaviour
         if (enemy != null) 
         { 
             enemy.Fix();
+            Destroy(gameObject); // Destruye el proyectil si colisiona con un enemigo
         }
-    }
 
-    void OnCollisionEnter2D(Collision2D collision) 
-    { 
-        Destroy(gameObject); 
+        if(other.gameObject.layer == LayerMask.NameToLayer("World"))
+        {
+            Destroy(gameObject); // Destruye el proyectil si colisiona con los colliders del tilemap
+        }
     }
 }

@@ -3,7 +3,12 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags: []
+  tags:
+  - Ruta
+  - Boss
+  - Robot
+  - PlayerProjectile
+  - EnemyProjectile
   layers:
   - Default
   - TransparentFX
@@ -15,7 +20,7 @@ TagManager:
   - Projectiles
   - Decor
   - NPC
-  - 
+  - World
   - 
   - 
   - 

@@ -9,8 +9,17 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    // Caches de parámetros para evitar string lookups cada frame
+    private static readonly int HashLookX = Animator.StringToHash("Look X");
+    private static readonly int HashLookY = Animator.StringToHash("Look Y");
+    private static readonly int HashShootX = Animator.StringToHash("Shoot X");
+    private static readonly int HashShootY = Animator.StringToHash("Shoot Y");
+    private static readonly int HashLaunch = Animator.StringToHash("Launch");
+    private static readonly int HashHit = Animator.StringToHash("Hit");
+    private static readonly int HashSpeed = Animator.StringToHash("Speed");
+
     // Variables related to player character movement
-    public PlayerInput Input;
+    PlayerInput Input;
     Rigidbody2D rb;
     Vector2 move;
     public float movementSpeed = 3.0f;
@@ -76,9 +85,9 @@ public class PlayerController : MonoBehaviour
                 isInvincible = false;
         }
 
-        animator.SetFloat("Look X", moveDirection.x);
-        animator.SetFloat("Look Y", moveDirection.y); 
-        animator.SetFloat("Speed", move.magnitude);
+        animator.SetFloat(HashLookX, moveDirection.x);
+        animator.SetFloat(HashLookY, moveDirection.y); 
+        animator.SetFloat(HashSpeed, move.magnitude);
 
         if (!Mathf.Approximately(move.x, 0.0f) || !Mathf.Approximately(move.y, 0.0f))
         {
@@ -99,7 +108,7 @@ public class PlayerController : MonoBehaviour
         if (amount < 0) 
         { 
             if (isInvincible) return;
-            animator.SetTrigger("Hit");
+            animator.SetTrigger(HashHit);
             isInvincible = true; 
             damageCooldown = timeInvincible; 
         }
@@ -110,10 +119,20 @@ public class PlayerController : MonoBehaviour
 
     public void Launch(InputAction.CallbackContext context)
     {
-        GameObject projectileObject = Instantiate(projectilePrefab, rb.position + Vector2.up * 1.25f, Quaternion.identity);
-        Projectile projectile = projectileObject.GetComponent<Projectile>(); 
-        projectile.Launch(moveDirection, 300);
-        animator.SetTrigger("Launch");
+        if (context.performed)
+        {
+            Vector2 spawnPosition = rb.position + Vector2.up * 1.25f; // Posición de spawn del proyectil, ligeramente por encima del jugador
+            GameObject projectileObject = Instantiate(projectilePrefab, spawnPosition, Quaternion.identity);
+            Projectile projectile = projectileObject.GetComponent<Projectile>();
+            Vector3 mousePos = Mouse.current.position.ReadValue();
+            Vector3 worldPoint = Camera.main.ScreenToWorldPoint(mousePos) + new Vector3(0,0,10); // Obtenemos el punto en el mundo donde se encuentra el mouse
+            Vector2 direction = ((Vector2)worldPoint - spawnPosition).normalized; // normalizamos la dirección del proyectil para que tenga una longitud de 1
+            //Debug.Log($"Mouse Position: {mousePos}, World Point: {worldPoint}, Direction: {direction}");
+            projectile.Launch(direction, 20);
+            animator.SetFloat(HashShootX, direction.x);
+            animator.SetFloat(HashShootY, direction.y);
+            animator.SetTrigger(HashLaunch);
+        }
     }
 
     public void Interact(InputAction.CallbackContext context)
