@@ -1,3 +1,4 @@
+using System.Collections;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
@@ -20,6 +21,9 @@ public class BossFightController : MonoBehaviour
     // Particle systems para efectos visuales
     public ParticleSystem smokeParticleEffect;
     public ParticleSystem fixedParticleEffect;
+
+    [Header("Spawn Points")]
+    public GameObject[] spawnPoints; // Array de puntos de spawn para los robots 
 
 
     private void Awake()
@@ -49,6 +53,11 @@ public class BossFightController : MonoBehaviour
         {
             // Fase 1: Solo lanza proyectiles
             StartPhase();
+            if (Random.Range(0f, 10f) < 0.01f) // Probabilidad de disparar cada frame (ajustable)
+            {
+                ShootAtPlayer();
+            }
+            //StartCoroutine(SpawnRobotsWithDelay()); // Spawnea robots con un delay entre cada uno
         }
         else if(healthPercentage <= 0.66f && healthPercentage > 0.33f)
         {
@@ -100,6 +109,15 @@ public class BossFightController : MonoBehaviour
     void SpawnRobot()
     {
         Instantiate(robot, transform.position + Vector3.down * 2f, Quaternion.identity); // COMPLETAR
+    }
+
+    IEnumerator SpawnRobotsWithDelay()
+    {
+        for (int i = 0; i < spawnPoints.Length; i++)
+        {
+            Instantiate(robot, spawnPoints[i].transform.position, Quaternion.identity); 
+        }
+        yield return new WaitForSeconds(2f); // Espera 2 segundos antes de spawnear el siguiente robot
     }
 
     void ShootAngledProjectiles()

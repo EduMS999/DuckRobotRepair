@@ -12,8 +12,9 @@ GameObject:
   - component: {fileID: 4460111615743089282}
   - component: {fileID: 2640702814886458043}
   - component: {fileID: 45605422709599935}
-  - component: {fileID: 7280761915177233363}
   - component: {fileID: 511092723644752566}
+  - component: {fileID: -5237317943166182854}
+  - component: {fileID: 3382880225759067389}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Robot
@@ -169,24 +170,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &7280761915177233363
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8504290076241904913}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d743554d8624e6142a4900b9024174b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyController
-  speed: 1
-  vertical: 1
-  changeTime: 3
-  smokeParticleEffect: {fileID: 2241496745999403329}
-  fixedParticleEffect: {fileID: 6163361996099992733, guid: 703965527e46abd45a2b2f1324c42aad,
-    type: 3}
 --- !u!95 &511092723644752566
 Animator:
   serializedVersion: 7
@@ -209,6 +192,38 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &-5237317943166182854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8504290076241904913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35fdac892d3bfe84fa9a539a27b65101, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
+  chaseSpeed: 3.5
+  detectionRange: 9999
+  loseRange: 9999
+  stoppingDistance: 0
+--- !u!114 &3382880225759067389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8504290076241904913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d743554d8624e6142a4900b9024174b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyController
+  vertical: 0
+  smokeParticleEffect: {fileID: 2241496745999403329}
+  fixedParticleEffect: {fileID: 6163361996099992733, guid: 703965527e46abd45a2b2f1324c42aad,
+    type: 3}
 --- !u!1001 &6152094189333282096
 PrefabInstance:
   m_ObjectHideFlags: 0

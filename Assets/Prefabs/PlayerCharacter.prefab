@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 4563188571082845538}
   m_Layer: 6
   m_Name: PlayerCharacter
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -108,7 +108,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43661cfccd350ca47ade471887c7ccbe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  Input: {fileID: 0}
   movementSpeed: 6.01
   maxHealth: 5
   timeInvincible: 2

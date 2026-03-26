@@ -33,7 +33,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0, y: 11.03, z: 0}
   m_LocalScale: {x: 5.576411, y: 5.576411, z: 5.576411}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 4324552387821515480}
   m_Father: {fileID: 0}
@@ -224,6 +224,10 @@ MonoBehaviour:
   smokeParticleEffect: {fileID: 6397388597346788864}
   fixedParticleEffect: {fileID: 6163361996099992733, guid: 703965527e46abd45a2b2f1324c42aad,
     type: 3}
+  spawnPoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!1 &8073293027530073556
 GameObject:
   m_ObjectHideFlags: 0
