@@ -220,10 +220,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d743554d8624e6142a4900b9024174b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
-  vertical: 0
   smokeParticleEffect: {fileID: 2241496745999403329}
   fixedParticleEffect: {fileID: 6163361996099992733, guid: 703965527e46abd45a2b2f1324c42aad,
     type: 3}
+  destroyedParticleEffect: {fileID: 6779437720910146437, guid: ec7702d7dc01aae4daed50e96ff2a6db,
+    type: 3}
+  healthCollectibles:
+  - {fileID: 6547904525702767419, guid: d1e742190d0439e41a31cfdde347d5d7, type: 3}
+  - {fileID: 771640324415679978, guid: efbfe569528d48b4986cde095fc77c2f, type: 3}
 --- !u!1001 &6152094189333282096
 PrefabInstance:
   m_ObjectHideFlags: 0

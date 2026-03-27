@@ -5,13 +5,15 @@ using UnityEngine;
 public class BossFightController : MonoBehaviour
 {
     [Header("Estadisticas")]
-    public float maxHealth = 1000f;
+    public float maxHealth = 2500f;
     private float currentHealth;
     private float healthPercentage;
+    private bool isInvencible = false;
 
     [Header("Recursos")]
     public GameObject projectile;
     public GameObject robot;
+    public GameObject trampa;
 
     PatrullaBoss iniciarPatrulla;
     Rigidbody2D rb;
@@ -25,6 +27,21 @@ public class BossFightController : MonoBehaviour
     [Header("Spawn Points")]
     public GameObject[] spawnPoints; // Array de puntos de spawn para los robots 
 
+    //Controlar tiempos entre rafagas
+    private bool isShooting = false;
+    private float shootCooldown = 1.5f;
+    private float shootTimer = 0f;
+
+    //Controlar tiempos de spawn de robots
+    private bool isSpawning = false;
+    private float spawnCooldown = 3f;
+    private float spawnTimer = 0f;
+
+    private int currentPhase = 0;
+    private bool isInPhaseTransition = false;
+    private bool trapsEnabled = false;
+
+    public bool isDead = false;
 
     private void Awake()
     {
@@ -49,30 +66,102 @@ public class BossFightController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(healthPercentage <= 1f && healthPercentage > 0.66f)
+        shootTimer += Time.deltaTime;
+        spawnTimer += Time.deltaTime;
+
+        if (healthPercentage <= 1f && healthPercentage > 0.66f)
         {
             // Fase 1: Solo lanza proyectiles
-            StartPhase();
+            CheckPhaseTransition(1);
+            if (isInPhaseTransition)
+                return; // no ataca durante la transición
             if (Random.Range(0f, 10f) < 0.01f) // Probabilidad de disparar cada frame (ajustable)
             {
                 ShootAtPlayer();
             }
-            //StartCoroutine(SpawnRobotsWithDelay()); // Spawnea robots con un delay entre cada uno
+
+            if(shootTimer >= shootCooldown && !isShooting)
+            {
+                StartCoroutine(ShootAngledProjectiles());
+                shootTimer = 0f;
+            }
         }
         else if(healthPercentage <= 0.66f && healthPercentage > 0.33f)
         {
-            // Fase 2: Fase 1 + spawnea robots que persiguen con velocidades distintas
+            // Fase 2: Fase 1 + spawnea robots que persiguen
+            CheckPhaseTransition(2);
+            if (isInPhaseTransition)
+                return; // no ataca durante la transición
+            if (Random.Range(0f, 10f) < 0.01f) // Probabilidad de disparar cada frame (ajustable)
+            {
+                ShootAtPlayer();
+            }
+
+            if (shootTimer >= shootCooldown && !isShooting)
+            {
+                StartCoroutine(ShootAngledProjectiles());
+                shootTimer = 0f;
+            }
+            if(spawnTimer >= spawnCooldown && !isSpawning)
+            {
+                StartCoroutine(SpawnRobotsWithDelay());
+                spawnTimer = 0f;
+            }
         }
         else if(healthPercentage <= 0.33f && healthPercentage > 0f)
         {
             // Fase 3: Fase 2 + paneles de daño en los dos lados, lanzamientos mas agresivos y velocidad aumentada
+            CheckPhaseTransition(3);
+            if (isInPhaseTransition)
+                return; // no ataca durante la transición
+            if (Random.Range(0f, 10f) < 0.01f) // Probabilidad de disparar cada frame (ajustable)
+            {
+                ShootAtPlayer();
+            }
+
+            if (shootTimer >= shootCooldown && !isShooting)
+            {
+                StartCoroutine(ShootAngledProjectiles());
+                shootTimer = 0f;
+            }
+            if (spawnTimer >= spawnCooldown && !isSpawning)
+            {
+                StartCoroutine(SpawnRobotsWithDelay());
+                spawnTimer = 0f;
+            }
+            CheckTramp(); 
         }
     }
 
     void StartPhase()
     {
-        // Añadir camara shake o algun efecto visual para indicar el cambio de fase
-        // Añadir invencibilidad temporal al boss durante la transición de fase para evitar que el jugador abuse del daño durante el cambio de fase
+        StartCoroutine(TriggerStartPhaseAnimation()); // Inicia la animación de transición de fase y la invencibilidad temporal
+    }
+
+    void CheckPhaseTransition(int newPhase)
+    {
+        if (currentPhase == newPhase) return; // ya estamos en esta fase, no hacer nada
+
+        currentPhase = newPhase;
+        StartPhase(); // solo se ejecuta una vez al cambiar de fase
+    }
+    void CheckTramp()
+    {
+        if (trapsEnabled) return; // ya activadas, no repetir
+
+        trapsEnabled = true;
+        StartCoroutine(EnableTraps());
+    }
+
+    IEnumerator EnableTraps()
+    {
+        while (trapsEnabled)
+        {
+            trampa.SetActive(true);
+            yield return new WaitForSeconds(10f);
+            trampa.SetActive(false);
+            yield return new WaitForSeconds(3f); // pausa entre activaciones
+        }
     }
 
     void IniciarPatrulla()
@@ -88,6 +177,8 @@ public class BossFightController : MonoBehaviour
 
     void TakeDamage(float damage)
     {
+        if(isInvencible)
+            return; // Si el boss es invencible, no recibe daño
         currentHealth -= damage;
         healthPercentage = currentHealth / maxHealth;
         //Debug.Log("Boss Health: " + currentHealth + "/" + maxHealth + " (" + (healthPercentage * 100) + "%)");  
@@ -104,30 +195,32 @@ public class BossFightController : MonoBehaviour
         smokeParticleEffect.Stop();
         ParticleSystem fpe = Instantiate(fixedParticleEffect, transform.position + Vector3.up * 7f, Quaternion.identity, transform);
         fpe.transform.localScale = Vector3.one * 9f; // Aumentar el tamaño del efecto de partículas para que sea más impresionante
+        trapsEnabled = false; // Desactivar trampas al morir
+        isDead = true;
     }
 
-    void SpawnRobot()
-    {
-        Instantiate(robot, transform.position + Vector3.down * 2f, Quaternion.identity); // COMPLETAR
-    }
 
     IEnumerator SpawnRobotsWithDelay()
     {
+        isSpawning = true;
         for (int i = 0; i < spawnPoints.Length; i++)
         {
             Instantiate(robot, spawnPoints[i].transform.position, Quaternion.identity); 
+            yield return new WaitForSeconds(0.2f); // Espera 2 segundos antes de spawnear el siguiente robot
         }
-        yield return new WaitForSeconds(2f); // Espera 2 segundos antes de spawnear el siguiente robot
+        isSpawning = false;
     }
 
-    void ShootAngledProjectiles()
+    IEnumerator ShootAngledProjectiles()
     {
+        isShooting = true;
+
         float angleStep = 30f;
         int shootingAngles = Mathf.RoundToInt(180f / angleStep); // 5 angulos de disparo (30, 60, 90, 120, 150)
 
         for (int i = 1; i < shootingAngles; i++) // Dispara proyectiles a 30 grados de separación, empezando desde 30 grados y acabando en 150 grados
         {
-            float angle = i * angleStep +180;
+            float angle = i * angleStep + 180;
             Vector2 direction = new Vector2(
                 Mathf.Cos(angle * Mathf.Deg2Rad),
                 Mathf.Sin(angle * Mathf.Deg2Rad)
@@ -135,8 +228,12 @@ public class BossFightController : MonoBehaviour
 
             Vector2 spawnPos = transform.position + Vector3.up * 2f;
             GameObject bossProjectile = Instantiate(projectile, spawnPos, Quaternion.identity);
-            bossProjectile.GetComponent<BossProjectile>().Launch(direction, 25f);
+            bossProjectile.GetComponent<BossProjectile>().Launch(direction, 5f);
+
+            yield return new WaitForSeconds(0.1f); // Espera 5 segundos antes de disparar el siguiente conjunto de proyectiles
         }
+
+        isShooting = false;
     }
 
     void ShootAtPlayer()
@@ -147,7 +244,7 @@ public class BossFightController : MonoBehaviour
             Vector2 direction = (player.transform.position - transform.position).normalized;
             Vector2 spawnPos = transform.position + Vector3.up * 2f;
             GameObject bossProjectile = Instantiate(projectile, spawnPos, Quaternion.identity);
-            bossProjectile.GetComponent<BossProjectile>().Launch(direction, 25f);
+            bossProjectile.GetComponent<BossProjectile>().Launch(direction, 10f);
         }
     }
 
@@ -159,4 +256,19 @@ public class BossFightController : MonoBehaviour
             Destroy(other.gameObject); // Destruir el proyectil al impactar
         }
     }
+
+    IEnumerator TriggerStartPhaseAnimation()
+    {
+        isInPhaseTransition = true;
+        isInvencible = true;
+        animator.SetBool("startPhase", true);
+
+        yield return new WaitForSeconds(5f);
+
+        animator.SetBool("startPhase", false);
+        isInvencible = false;
+        isInPhaseTransition = false; // ahora sí puede atacar
+    }
+
+
 }

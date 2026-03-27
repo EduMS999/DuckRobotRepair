@@ -18,7 +18,7 @@ public class BossProjectile : MonoBehaviour
     public void Launch(Vector2 direction, float force)
     {
         rigidbody2d.AddForce(direction * force, ForceMode2D.Impulse); // Aplica una fuerza instantánea al proyectil en la dirección dada
-        Destroy(gameObject, 3f);
+        Destroy(gameObject, 6f);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -29,7 +29,8 @@ public class BossProjectile : MonoBehaviour
             if (player != null)
             {
                 player.ChangeHealth(-1); // Reduce la salud del jugador en 1 si colisiona con el proyectil
-                Destroy(gameObject); // Destruye el proyectil después de colisionar con el jugador
+                if (!player.invincible)
+                    Destroy(gameObject); // Si el jugador es invencible, no se destruye el proyectil
             }
         }
     }

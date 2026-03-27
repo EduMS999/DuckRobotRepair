@@ -30,8 +30,9 @@ public class PlayerController : MonoBehaviour
     int currentHealth;
 
     // Variables related to temporary invincibility
-    public float timeInvincible = 2.0f;
+    public float timeInvincible = 1.0f;
     bool isInvincible;
+    public bool invincible { get { return isInvincible; } }
     float damageCooldown;
 
     // Variables related to Animation

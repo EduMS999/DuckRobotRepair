@@ -6,14 +6,14 @@ public class GameManager : MonoBehaviour
 {
     public PlayerController player;
     //FixedScript[] enemies;
-    EnemyController[] enemies;
+    BossFightController boss;
     public UIHandler uiHandler;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         //enemies = FindObjectsByType<FixedScript>(FindObjectsSortMode.None);
-        enemies = FindObjectsByType<EnemyController>(FindObjectsSortMode.None);
+        boss = GameObject.Find("Boss").GetComponent<BossFightController>();
     }
 
     // Update is called once per frame
@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
             Invoke(nameof(ReloadScene), 3f);
         }
 
-        if (AllEnemiesFixed())
+        if (boss.isDead)
         {
             uiHandler.DisplayWinScreen();
             Invoke(nameof(ReloadScene), 3f);
@@ -33,23 +33,23 @@ public class GameManager : MonoBehaviour
     }
     void ReloadScene()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene("MainScene");
     }
 
-    bool AllEnemiesFixed()
-    {
-        //foreach(FixedScript fixedScript in enemies)
-        //{
-        //    if (fixedScript.isBroken) return false;
-        //}
-        //return true;
-        foreach (EnemyController enemy in enemies)
-        {
-            if (enemy.isBroken) return false;
-        }
-        return true;
+    //bool AllEnemiesFixed()
+    //{
+    //    //foreach(FixedScript fixedScript in enemies)
+    //    //{
+    //    //    if (fixedScript.isBroken) return false;
+    //    //}
+    //    //return true;
+    //    foreach (EnemyController enemy in enemies)
+    //    {
+    //        if (enemy.isBroken) return false;
+    //    }
+    //    return true;
 
-    }
+    //}
 
     /*void HandleEnemyFixed()
     {

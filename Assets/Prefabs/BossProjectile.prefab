@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3644199193875368972}
   - component: {fileID: 2001736377124412209}
   - component: {fileID: 6417408915799138877}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: BossProjectile
   m_TagString: EnemyProjectile
   m_Icon: {fileID: 0}

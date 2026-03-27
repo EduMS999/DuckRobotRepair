@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
@@ -11,6 +12,9 @@ public class EnemyController : MonoBehaviour
 
     public ParticleSystem smokeParticleEffect;
     public ParticleSystem fixedParticleEffect;
+    public ParticleSystem destroyedParticleEffect;
+
+    public GameObject[] healthCollectibles; // Array de objetos de salud que se activarán al ser reparado
 
     private void Start()
     {
@@ -25,11 +29,14 @@ public class EnemyController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        PlayerController player = other.gameObject.GetComponent<PlayerController>();
-
-        if (player != null)
+        if (other.gameObject.CompareTag("Player"))
         {
-            player.ChangeHealth(-1);
+            PlayerController player = other.gameObject.GetComponent<PlayerController>();
+
+            if (player != null)
+            {
+                player.ChangeHealth(-1);
+            }
         }
     }
 
@@ -45,6 +52,21 @@ public class EnemyController : MonoBehaviour
         rb.simulated = false; 
         smokeParticleEffect.Stop();
         Instantiate(fixedParticleEffect, transform.position + Vector3.up * 2f, Quaternion.identity);
-        Destroy(gameObject, 3f);
+        int random = Random.Range(0, 100);
+        if(random < 20)
+        {
+            int randomIndex = Random.Range(0, healthCollectibles.Length);
+            Instantiate(healthCollectibles[randomIndex], transform.position + Vector3.up * 2f, Quaternion.identity);
+        }
+        
+        StartCoroutine(DestroyEnemy());
+
+    }
+
+    IEnumerator DestroyEnemy()
+    {
+        yield return new WaitForSeconds(3f);
+        Destroy(gameObject);
+        Instantiate(destroyedParticleEffect, transform.position + Vector3.up * 2f, Quaternion.identity);
     }
 }
