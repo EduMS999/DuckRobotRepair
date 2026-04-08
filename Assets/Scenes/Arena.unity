@@ -12440,19 +12440,6 @@ MonoBehaviour:
     DissipationDistance: 100
     PropagationSpeed: 343
   DefaultVelocity: {x: 0, y: -1, z: 0}
---- !u!114 &1030754533
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1030754524}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c32ecfb4d9214cf4088dca69a5685f50, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CameraShake
-  impulseSource: {fileID: 0}
 --- !u!1001 &1176242075
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13025,6 +13012,11 @@ PrefabInstance:
       objectReference: {fileID: 603321145}
     - target: {fileID: 924996258094666767, guid: 133cf7cfa2228944d93df126400b4cf3,
         type: 3}
+      propertyPath: maxHealth
+      value: 2500
+      objectReference: {fileID: 0}
+    - target: {fileID: 924996258094666767, guid: 133cf7cfa2228944d93df126400b4cf3,
+        type: 3}
       propertyPath: 'spawnPoints.Array.data[0]'
       value: 
       objectReference: {fileID: 246797787}
@@ -13101,10 +13093,6 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1030754532}
-    - targetCorrespondingSourceObject: {fileID: 1474769822549180127, guid: 133cf7cfa2228944d93df126400b4cf3,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1030754533}
   m_SourcePrefab: {fileID: 100100000, guid: 133cf7cfa2228944d93df126400b4cf3, type: 3}
 --- !u!4 &8056470541902066844
 Transform:
