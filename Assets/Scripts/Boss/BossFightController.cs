@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
@@ -181,6 +182,7 @@ public class BossFightController : MonoBehaviour
             return; // Si el boss es invencible, no recibe daño
         currentHealth -= damage;
         healthPercentage = currentHealth / maxHealth;
+        UIHandler.instance.SetBossHealthValue(healthPercentage);
         //Debug.Log("Boss Health: " + currentHealth + "/" + maxHealth + " (" + (healthPercentage * 100) + "%)");  
         if (currentHealth <= 0)
         {

@@ -1,6 +1,7 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <ui:Template name="EndScreen" src="project://database/Assets/UI/EndScreen.uxml?fileID=9197481963319205126&amp;guid=f969898db7a372341a5705392857be3f&amp;type=3#EndScreen"/>
     <ui:Template name="NPCDialogue" src="project://database/Assets/UI/NPCDialogue.uxml?fileID=9197481963319205126&amp;guid=3ba7fe389676e3540b6c9a1a62765490&amp;type=3#NPCDialogue"/>
+    <Style src="project://database/Assets/UI/transform-origin.uss?fileID=7433441132597879392&amp;guid=6d880a04022f16c42a6284af87bb6e4c&amp;type=3#transform-origin"/>
     <ui:VisualElement name="HealthBarBackground" style="flex-grow: 0; width: 20%; height: 15%; background-image: url(&quot;project://database/Assets/_2DAdventureGame/Tutorial_Demo/Demo_Art/Ducko/UI/UIHealthFrameDucko.png?fileID=2800000&amp;guid=918e7a741c040c140a699a450f3d6e2d&amp;type=3#UIHealthFrameDucko&quot;); -unity-background-scale-mode: scale-to-fit; aspect-ratio: auto;">
         <ui:VisualElement name="HealthBarContainer" style="flex-grow: 1; position: absolute; height: 57px; width: 197px; top: 48px; left: 160px;">
             <ui:VisualElement name="HealthBar" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/_2DAdventureGame/Tutorial_Demo/Demo_Art/Ducko/UI/UIHealthBarDucko.png?fileID=2800000&amp;guid=335e35d6c24ef5141b778902f9d19a3b&amp;type=3#UIHealthBarDucko&quot;);"/>
@@ -9,4 +10,10 @@
     </ui:VisualElement>
     <ui:Instance template="NPCDialogue" name="NPCDialogue" style="position: absolute; top: 70%; right: 10%; left: 10%;"/>
     <ui:Instance template="EndScreen" name="EndScreen" style="position: absolute; top: -1px; right: 0; bottom: 2px; left: 0;"/>
+    <ui:VisualElement name="BossHealthBarBackground" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); background-image: url(&quot;project://database/Assets/_2DAdventureGame/Art/SugarLand/UI/UIHealthFrameVertical.png?fileID=21300000&amp;guid=a98a1d4dc47fabc4d823987f66448d23&amp;type=3#UIHealthFrameVertical&quot;); width: 277px; height: 784px; -unity-background-scale-mode: scale-to-fit; -unity-background-image-tint-color: rgb(238, 184, 41); left: 1631px; opacity: 1; visibility: visible;">
+        <ui:VisualElement name="BossHealthBarContainer" style="flex-grow: 1; position: absolute; height: 324px; width: 86px; top: 349px; left: 100px;">
+            <ui:VisualElement name="BossHealthBar" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/_2DAdventureGame/Art/SugarLand/UI/UIHealthBarVertical.png?fileID=-5733026429971184479&amp;guid=e738280d871a39441a9c56b6169bb2e9&amp;type=3#UIHealthBarVertical_0&quot;); background-color: rgba(0, 0, 0, 0); -unity-background-image-tint-color: rgb(247, 246, 0); height: auto;"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="BossPortrait" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/_2DAdventureGame/Art/Ducko/Characters/Enemy.png?fileID=21300000&amp;guid=19493c213807a23419dfb58b1efa4edb&amp;type=3#Enemy&quot;); -unity-background-scale-mode: scale-to-fit; position: absolute; height: 218px; width: 236px; top: 121px; left: 18px;"/>
+    </ui:VisualElement>
 </ui:UXML>

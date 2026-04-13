@@ -189,18 +189,4 @@ public class EnemyMovement : MonoBehaviour
     }
 
 
-void OnDrawGizmosSelected()
-    {
-        // Círculo Verde: Rango de detección (Entrada)
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, detectionRange);
-
-        // Círculo Amarillo: Rango de pérdida (Salida / Histéresis)
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, loseRange);
-
-        // Círculo Rojo: Distancia de parada
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, stoppingDistance);
-    }
 }

@@ -1,0 +1,4 @@
+
+#BossHealthBar {
+    transform-origin: top center;
+}

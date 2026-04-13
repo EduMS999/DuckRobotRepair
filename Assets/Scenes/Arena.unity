@@ -12954,6 +12954,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 950f3dcf899c03e40869d934156b12e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIHandler
+  m_bossHealthBarIndex: 1
   displayTime: 4
 --- !u!114 &2205118901269413891
 MonoBehaviour:
