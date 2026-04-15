@@ -1,10 +1,5 @@
-using System;
-using System.Threading;
-using Beginner2D;
-using UnityEditor.Build;
-using UnityEditor.Timeline.Actions;
+using System.Collections;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
@@ -23,6 +18,10 @@ public class PlayerController : MonoBehaviour
     Rigidbody2D rb;
     Vector2 move;
     public float movementSpeed = 3.0f;
+    public float dashDistance = 3f; // Valor optimo
+    public float dashDuration = 0.2f; // Valor optimo
+    private bool isDashing = false;
+    private LineRenderer lineRenderer;
 
     // Variables related to the health system
     public int maxHealth = 5;
@@ -100,6 +99,9 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate() 
     {
+        if (isDashing)
+            return; // Impide que el personaje se mueva normal mientras dashea
+
         Vector2 position = (Vector2)rb.position + move * movementSpeed * Time.deltaTime; 
         rb.MovePosition(position);
     }
@@ -152,4 +154,35 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
+    public void Dash(InputAction.CallbackContext context)
+    {
+        if(context.performed)
+        {
+            Debug.Log("Dash");
+            StartCoroutine(DoDash());
+            //rb.AddForce(move * 100, ForceMode2D.Impulse);
+        }
+    }
+
+    IEnumerator DoDash()
+    {
+        isDashing = true;
+        Vector2 startPosition = rb.position;
+        Vector2 targetPosition = (Vector2)transform.position + (moveDirection * dashDistance);
+        float elapsed = 0;
+
+        while (elapsed < dashDuration)
+        {
+            elapsed += Time.deltaTime;
+            float percent = elapsed / dashDuration;
+                
+            // Mueve el rigidbody físicamente hacia el destino
+            rb.MovePosition(Vector2.Lerp(startPosition, targetPosition, percent));
+            yield return null;
+        }
+
+        isDashing= false;
+    }
 }
+
