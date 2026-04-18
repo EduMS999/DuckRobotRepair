@@ -25,10 +25,13 @@ public class GameManager : MonoBehaviour
             Invoke(nameof(ReloadScene), 3f);
         }
 
-        if (boss.isDead)
+        if(boss != null)
         {
-            uiHandler.DisplayWinScreen();
-            Invoke(nameof(ReloadScene), 3f);
+            if (boss.isDead)
+            {
+                uiHandler.DisplayWinScreen();
+                Invoke(nameof(ReloadScene), 3f);
+            }
         }
     }
     void ReloadScene()
