@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 
 public class PlayerController : MonoBehaviour
 {
@@ -21,7 +22,10 @@ public class PlayerController : MonoBehaviour
     public float dashDistance = 3f; // Valor optimo
     public float dashDuration = 0.2f; // Valor optimo
     private bool isDashing = false;
-    private LineRenderer lineRenderer;
+    private TrailRenderer trailRenderer;
+    private bool canDash = true; // Variable para controlar si el jugador puede dashear o no
+    public float dashCooldownTime = 1.0f; // Tiempo de cooldown entre dashes
+    private float dashCooldown; // Tiempo de cooldown entre dashes
 
     // Variables related to the health system
     public int maxHealth = 5;
@@ -52,7 +56,8 @@ public class PlayerController : MonoBehaviour
         Input = GetComponent<PlayerInput>();    
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        
+        trailRenderer = GetComponentInChildren<TrailRenderer>();
+
         currentHealth = maxHealth;
     }
 
@@ -83,6 +88,13 @@ public class PlayerController : MonoBehaviour
             damageCooldown -= Time.deltaTime;
             if (damageCooldown < 0)
                 isInvincible = false;
+        }
+
+        if(!canDash)
+        {
+            dashCooldown -= Time.deltaTime;
+            if (dashCooldown < 0)
+                canDash = true;
         }
 
         animator.SetFloat(HashLookX, moveDirection.x);
@@ -159,7 +171,7 @@ public class PlayerController : MonoBehaviour
     {
         if(context.performed)
         {
-            Debug.Log("Dash");
+            //Debug.Log("Dash");
             StartCoroutine(DoDash());
             //rb.AddForce(move * 100, ForceMode2D.Impulse);
         }
@@ -167,7 +179,11 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator DoDash()
     {
+        if (!canDash) yield break; // Si el jugador no puede dashear, salimos de la corrutina
         isDashing = true;
+        dashCooldown = dashCooldownTime; // Reiniciamos el cooldown
+        canDash = false; // Desactivamos la posibilidad de dashear hasta que el cooldown termine
+        trailRenderer.enabled = true;
         Vector2 startPosition = rb.position;
         Vector2 targetPosition = (Vector2)transform.position + (moveDirection * dashDistance);
         float elapsed = 0;
@@ -182,7 +198,8 @@ public class PlayerController : MonoBehaviour
             yield return null;
         }
 
-        isDashing= false;
+        trailRenderer.enabled = false;
+        isDashing = false;
     }
 }
 
