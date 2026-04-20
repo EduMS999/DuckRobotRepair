@@ -134,17 +134,12 @@ public class BossFightController : MonoBehaviour
         }
     }
 
-    void StartPhase()
-    {
-        StartCoroutine(TriggerStartPhaseAnimation()); // Inicia la animación de transición de fase y la invencibilidad temporal
-    }
-
     void CheckPhaseTransition(int newPhase)
     {
         if (currentPhase == newPhase) return; // ya estamos en esta fase, no hacer nada
 
         currentPhase = newPhase;
-        StartPhase(); // solo se ejecuta una vez al cambiar de fase
+        StartCoroutine(StartPhase()); // solo se ejecuta una vez al cambiar de fase
     }
     void CheckTramp()
     {
@@ -259,7 +254,7 @@ public class BossFightController : MonoBehaviour
         }
     }
 
-    IEnumerator TriggerStartPhaseAnimation()
+    IEnumerator StartPhase()
     {
         isInPhaseTransition = true;
         isInvencible = true;

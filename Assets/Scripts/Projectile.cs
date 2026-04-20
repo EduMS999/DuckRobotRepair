@@ -30,9 +30,9 @@ public class Projectile : MonoBehaviour
             Destroy(gameObject); // Destruye el proyectil si colisiona con un enemigo
         }
 
-        if(other.gameObject.layer == LayerMask.NameToLayer("World"))
+        if(other.gameObject.layer == LayerMask.NameToLayer("Decor"))
         {
-            Destroy(gameObject); // Destruye el proyectil si colisiona con los colliders del tilemap
+            Destroy(gameObject); // Destruye el proyectil si colisiona con el lago y las decoraciones
         }
     }
 }

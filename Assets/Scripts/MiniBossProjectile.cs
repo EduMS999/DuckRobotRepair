@@ -34,10 +34,9 @@ public class MiniBossProjectile : MonoBehaviour
             }
         }
 
-        if (other.gameObject.layer == LayerMask.NameToLayer("World"))
+        if (other.gameObject.layer == LayerMask.NameToLayer("Decor"))
         {
-            Destroy(gameObject); // Destruye el proyectil si colisiona con los colliders del tilemap
-            // ARREGLAR PARA QUE SOLO SE DESTRUYA CON LOS COLLIDER DE DENTRO DE LA ARENA Y NO DE LOS BORDES DE ESTA, YA QUE EL PROYECTIL SE DISPARA DESDE FUERA DE LA ARENA
+            Destroy(gameObject); // Destruye el proyectil si colisiona con un objeto del layer "Decor"
         }
     }
 }
