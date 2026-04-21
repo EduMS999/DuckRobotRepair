@@ -10,6 +10,7 @@ public class BossFightController : MonoBehaviour
     private float currentHealth;
     private float healthPercentage;
     private bool isInvencible = false;
+    public float shootForce = 5f;
 
     [Header("Recursos")]
     public GameObject projectile;
@@ -177,7 +178,7 @@ public class BossFightController : MonoBehaviour
             return; // Si el boss es invencible, no recibe daño
         currentHealth -= damage;
         healthPercentage = currentHealth / maxHealth;
-        UIHandler.instance.SetBossHealthValue(healthPercentage);
+        UIHandler.instance.SetBossHealthValue(healthPercentage, 1);
         //Debug.Log("Boss Health: " + currentHealth + "/" + maxHealth + " (" + (healthPercentage * 100) + "%)");  
         if (currentHealth <= 0)
         {
@@ -203,7 +204,7 @@ public class BossFightController : MonoBehaviour
         for (int i = 0; i < spawnPoints.Length; i++)
         {
             Instantiate(robot, spawnPoints[i].transform.position, Quaternion.identity); 
-            yield return new WaitForSeconds(0.2f); // Espera 2 segundos antes de spawnear el siguiente robot
+            yield return new WaitForSeconds(2f); // Espera 2 segundos antes de spawnear el siguiente robot
         }
         isSpawning = false;
     }
@@ -225,7 +226,7 @@ public class BossFightController : MonoBehaviour
 
             Vector2 spawnPos = transform.position + Vector3.up * 2f;
             GameObject bossProjectile = Instantiate(projectile, spawnPos, Quaternion.identity);
-            bossProjectile.GetComponent<BossProjectile>().Launch(direction, 5f);
+            bossProjectile.GetComponent<BossProjectile>().Launch(direction, shootForce);
 
             yield return new WaitForSeconds(0.1f); // Espera 5 segundos antes de disparar el siguiente conjunto de proyectiles
         }
@@ -241,7 +242,7 @@ public class BossFightController : MonoBehaviour
             Vector2 direction = (player.transform.position - transform.position).normalized;
             Vector2 spawnPos = transform.position + Vector3.up * 2f;
             GameObject bossProjectile = Instantiate(projectile, spawnPos, Quaternion.identity);
-            bossProjectile.GetComponent<BossProjectile>().Launch(direction, 10f);
+            bossProjectile.GetComponent<BossProjectile>().Launch(direction, shootForce);
         }
     }
 

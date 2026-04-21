@@ -10,8 +10,12 @@ public class UIHandler : MonoBehaviour
     private VisualElement m_WinScreen;
 
     [Header("Elementos Bosses")]
-    private VisualElement m_BossHealtBar;
-    private VisualElement m_BossHealtBarBackground;
+    private VisualElement m_BossHealthBar;
+    private VisualElement m_BossHealthBarBackground;
+    private VisualElement m_MiniBossHealthBar;
+    private VisualElement m_MiniBossHealthBackground;
+    private VisualElement m_MiniBossHealthBar2;
+    private VisualElement m_MiniBossHealthBackground2;
     public enum BossHealthBarIndex { Boss1 = 1, Boss2 = 2 }
     public BossHealthBarIndex m_bossHealthBarIndex; // Índice para seleccionar la barra de salud del jefe en el UI Document
 
@@ -47,17 +51,21 @@ public class UIHandler : MonoBehaviour
         // Busca la barra de salud del jefe según el índice seleccionado
         if (m_bossHealthBarIndex == BossHealthBarIndex.Boss1)
         {
-            m_BossHealtBar = uiDocument.rootVisualElement.Q<VisualElement>("BossHealthBar");
-            m_BossHealtBarBackground = uiDocument.rootVisualElement.Q<VisualElement>("BossHealthBarBackground");
+            m_BossHealthBar = uiDocument.rootVisualElement.Q<VisualElement>("BossHealthBar");
+            m_BossHealthBarBackground = uiDocument.rootVisualElement.Q<VisualElement>("BossHealthBarBackground");
         } 
         else if (m_bossHealthBarIndex == BossHealthBarIndex.Boss2)
         {
-            m_BossHealtBar = uiDocument.rootVisualElement.Q<VisualElement>("BossHealthBar2");
-            m_BossHealtBarBackground = uiDocument.rootVisualElement.Q<VisualElement>("BossHealthBarBackground2");
+            m_BossHealthBar = uiDocument.rootVisualElement.Q<VisualElement>("BossHealthBar2");
+            m_BossHealthBarBackground = uiDocument.rootVisualElement.Q<VisualElement>("BossHealthBarBackground2");
+            m_MiniBossHealthBar = uiDocument.rootVisualElement.Q<VisualElement>("MiniBossHealthBar");
+            m_MiniBossHealthBackground = uiDocument.rootVisualElement.Q<VisualElement>("MiniBossHealthBarBackground");
+            m_MiniBossHealthBar2 = uiDocument.rootVisualElement.Q<VisualElement>("MiniBossHealthBar2");
+            m_MiniBossHealthBackground2 = uiDocument.rootVisualElement.Q<VisualElement>("MiniBossHealthBarBackground2");
         }
 
-        if(m_BossHealtBar != null && m_BossHealtBarBackground != null)
-            m_BossHealtBarBackground.style.visibility = Visibility.Visible; 
+        if(m_BossHealthBar != null && m_BossHealthBarBackground != null)
+            m_BossHealthBarBackground.style.visibility = Visibility.Visible; 
     }
 
     // Update is called once per frame
@@ -80,10 +88,23 @@ public class UIHandler : MonoBehaviour
 
     }
 
-    public void SetBossHealthValue(float percentage)
+    public void SetBossHealthValue(float percentage, int bossIndex)
+    {
+        switch(bossIndex)
+        {
+            case 1: m_BossHealthBar.style.scale = new Vector3(1f, percentage, 1f); break;
+            case 2: m_BossHealthBar.style.width = Length.Percent(100 * percentage); break;
+        }
+    }
+
+    public void SetMiniBossHealthValue(float percentage, int miniBossIndex)
     {
         //m_BossHealtBar.style.height = Length.Percent(100 * percentage);
-        m_BossHealtBar.style.scale = new Vector3(1f, percentage, 1f);
+        switch (miniBossIndex)
+        {
+            case 1: m_MiniBossHealthBar.style.width = Length.Percent(100 * percentage); break;
+            case 2: m_MiniBossHealthBar2.style.width = Length.Percent(100 * percentage); break;
+        }
     }
 
 
@@ -91,6 +112,24 @@ public class UIHandler : MonoBehaviour
     {
         m_NonPlayerDialogue.style.display = DisplayStyle.Flex;
         m_TimerDisplay = displayTime;
+    }
+
+    public void DisplayMiniBossHealthBar(int miniBossIndex)
+    {
+        switch (miniBossIndex)
+        {
+            case 1: m_MiniBossHealthBackground.style.visibility = Visibility.Visible; break;
+            case 2: m_MiniBossHealthBackground2.style.visibility = Visibility.Visible; break;
+        }
+    }
+
+    public void HideMiniBossHealthBar(int miniBossIndex)
+    {
+        switch (miniBossIndex)
+        {
+            case 1: m_MiniBossHealthBackground.style.visibility = Visibility.Hidden; break;
+            case 2: m_MiniBossHealthBackground2.style.visibility = Visibility.Hidden; break;
+        }
     }
 
     // Hace visible las pantallas de fin con la opacidad (Negro a visible)----------------

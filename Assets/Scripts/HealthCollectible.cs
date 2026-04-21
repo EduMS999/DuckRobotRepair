@@ -10,7 +10,7 @@ public class HealthCollectible : MonoBehaviour
 
         PlayerController PlayerController = other.GetComponent<PlayerController>();
 
-        if(PlayerController.health < PlayerController.maxHealth && PlayerController != null)
+        if(PlayerController != null && PlayerController.health < PlayerController.maxHealth && other.gameObject.CompareTag("Player"))
         {
             PlayerController.ChangeHealth(amountHealed);
             Destroy(gameObject);   

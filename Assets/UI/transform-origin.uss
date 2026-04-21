@@ -2,3 +2,7 @@
 #BossHealthBar {
     transform-origin: top center;
 }
+
+#MiniBossPortrait {
+    scale: -1 1; /* horizontal */
+}

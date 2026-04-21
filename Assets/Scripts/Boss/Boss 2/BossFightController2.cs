@@ -8,11 +8,13 @@ public class BossFightController2 : MonoBehaviour
     private float currentHealth;
     private float healthPercentage;
     private bool isInvencible = false;
+    public float shootForce = 5f;
 
     [Header("Recursos")]
     public GameObject projectile;
     public GameObject robot;
     public GameObject[] trampas;
+    public GameObject miniBoss;
 
     PatrullaBoss2 iniciarPatrulla;
     Rigidbody2D rb;
@@ -182,7 +184,7 @@ public class BossFightController2 : MonoBehaviour
             return; // Si el boss es invencible, no recibe daño
         currentHealth -= damage;
         healthPercentage = currentHealth / maxHealth;
-        UIHandler.instance.SetBossHealthValue(healthPercentage);
+        UIHandler.instance.SetBossHealthValue(healthPercentage, 2);
         //Debug.Log("Boss Health: " + currentHealth + "/" + maxHealth + " (" + (healthPercentage * 100) + "%)");  
         if (currentHealth <= 0)
         {
@@ -205,7 +207,7 @@ public class BossFightController2 : MonoBehaviour
         for (int i = 0; i < spawnPoints.Length; i++)
         {
             Instantiate(robot, spawnPoints[i].transform.position, Quaternion.identity);
-            yield return new WaitForSeconds(1f); // Espera 1 segundo antes de spawnear el siguiente robot
+            yield return new WaitForSeconds(2f); // Espera 2 segundo antes de spawnear el siguiente robot
         }
         isSpawning = false;
     }
@@ -235,9 +237,9 @@ public class BossFightController2 : MonoBehaviour
 
             Vector2 spawnPos = transform.position + Vector3.up * 2f;
             GameObject bossProjectile = Instantiate(projectile, spawnPos, Quaternion.identity);
-            bossProjectile.GetComponent<BossProjectile>().Launch(direction, 5f);
+            bossProjectile.GetComponent<BossProjectile>().Launch(direction, shootForce);
 
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.2f);
         }
 
         isShooting = false;
@@ -251,7 +253,7 @@ public class BossFightController2 : MonoBehaviour
             Vector2 direction = (player.transform.position - transform.position).normalized;
             Vector2 spawnPos = transform.position + Vector3.up * 2f;
             GameObject bossProjectile = Instantiate(projectile, spawnPos, Quaternion.identity);
-            bossProjectile.GetComponent<BossProjectile>().Launch(direction, 10f);
+            bossProjectile.GetComponent<BossProjectile>().Launch(direction, shootForce);
         }
     }
 
@@ -283,7 +285,19 @@ public class BossFightController2 : MonoBehaviour
     {
         for (int i = 0; i < miniBossSpawnPoints.Length; i++)
         {
-            Instantiate(robot, miniBossSpawnPoints[i].transform.position, Quaternion.identity);
+            GameObject miniBossInstance = Instantiate(miniBoss, miniBossSpawnPoints[i].transform.position, Quaternion.identity);
+
+            if(i == 0)
+            {
+                miniBossInstance.GetComponent<SpriteRenderer>().flipX = true; // Voltea el mini boss que spawnea a la izquierda para que mire hacia el jugador
+                UIHandler.instance.DisplayMiniBossHealthBar(1); // Activa la barra de salud del mini boss en el UI
+                miniBossInstance.GetComponent<MiniBossController>().miniBossID = 1; // Asigna un ID al mini boss para que sepa qué barra de salud usar en el UI
+            }
+            if (i == 1)
+            {
+                UIHandler.instance.DisplayMiniBossHealthBar(2); // Activa la barra de salud del mini boss en el UI
+                miniBossInstance.GetComponent<MiniBossController>().miniBossID = 2; // Asigna un ID al mini boss para que sepa qué barra de salud usar en el UI
+            }
         }
     }
 }
